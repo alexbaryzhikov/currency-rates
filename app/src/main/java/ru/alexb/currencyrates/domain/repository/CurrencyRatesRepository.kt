@@ -4,5 +4,6 @@ import ru.alexb.currencyrates.domain.model.CurrencyRates
 import java.util.*
 
 interface CurrencyRatesRepository {
-    suspend fun getRates(base: Currency): CurrencyRates
+    suspend fun updateAndGetRates(base: Currency): CurrencyRates
+    fun getLastRates(): CurrencyRates
 }

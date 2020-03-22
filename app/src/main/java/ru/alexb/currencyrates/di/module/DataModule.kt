@@ -4,9 +4,11 @@ import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.alexb.currencyrates.data.datasource.CacheCurrencyRatesDataSourceImpl
 import ru.alexb.currencyrates.data.datasource.RemoteCurrencyRatesDataSourceImpl
 import ru.alexb.currencyrates.data.datasource.api.CurrencyRatesApi
 import ru.alexb.currencyrates.data.repository.CurrencyRatesRepositoryImpl
+import ru.alexb.currencyrates.data.repository.datasource.CacheCurrencyRatesDataSource
 import ru.alexb.currencyrates.data.repository.datasource.RemoteCurrencyRatesDataSource
 import ru.alexb.currencyrates.domain.repository.CurrencyRatesRepository
 
@@ -14,8 +16,11 @@ import ru.alexb.currencyrates.domain.repository.CurrencyRatesRepository
 class DataModule {
 
     @Provides
-    fun provideCurrencyRatesRepository(ds: RemoteCurrencyRatesDataSource): CurrencyRatesRepository {
-        return CurrencyRatesRepositoryImpl(ds)
+    fun provideCurrencyRatesRepository(
+        remoteDs: RemoteCurrencyRatesDataSource,
+        cacheDs: CacheCurrencyRatesDataSource
+    ): CurrencyRatesRepository {
+        return CurrencyRatesRepositoryImpl(remoteDs, cacheDs)
     }
 
     @Provides
@@ -34,6 +39,11 @@ class DataModule {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    @Provides
+    fun provideCacheCurrencyRatesDataSource(): CacheCurrencyRatesDataSource {
+        return CacheCurrencyRatesDataSourceImpl()
     }
 
     companion object {
