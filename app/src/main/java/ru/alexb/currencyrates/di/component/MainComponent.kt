@@ -5,6 +5,7 @@ import ru.alexb.currencyrates.MainActivity
 import ru.alexb.currencyrates.di.module.AppModule
 import ru.alexb.currencyrates.di.module.DataModule
 import ru.alexb.currencyrates.di.module.DomainModule
+import javax.inject.Singleton
 
 @Component(
     modules = [
@@ -13,6 +14,7 @@ import ru.alexb.currencyrates.di.module.DomainModule
         DomainModule::class
     ]
 )
+@Singleton
 interface MainComponent {
 
     fun inject(activity: MainActivity)

@@ -2,8 +2,7 @@ package ru.alexb.currencyrates.domain.interactor
 
 import android.util.Log
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
+import kotlinx.coroutines.channels.SendChannel
 import ru.alexb.currencyrates.domain.model.CurrencyRates
 import ru.alexb.currencyrates.domain.repository.CurrencyRatesRepository
 import java.math.BigDecimal
@@ -12,27 +11,26 @@ import java.util.concurrent.TimeUnit
 
 class CurrencyRatesInteractorImpl(
     private val ratesRepository: CurrencyRatesRepository,
-    private val ratesChannel: Channel<CurrencyRates>
+    private val ratesChannel: SendChannel<CurrencyRates>
 ) : CurrencyRatesInteractor {
     private var baseCurrency: Currency = BASE_CURRENCY_DEFAULT
     private var amount: BigDecimal = AMOUNT_DEFAULT
     private var scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var updatesJob: Job? = null
 
-    override fun getRatesChannel(): ReceiveChannel<CurrencyRates> {
-        Log.v(TAG, "getRatesChannel called")
-        return ratesChannel
-    }
-
     override fun startUpdates() {
         Log.v(TAG, "startUpdates called")
         updatesJob = scope.launch {
             while (true) {
-                val rates = ratesRepository.updateAndGetRates(baseCurrency)
-                ratesChannel.send(rates.multiplied(amount))
+                updateRates()
                 delay(UPDATE_INTERVAL)
             }
         }
+    }
+
+    private suspend fun updateRates() {
+        val rates = ratesRepository.updateAndGetRates(baseCurrency)
+        ratesChannel.send(rates.multiplied(amount))
     }
 
     override fun stopUpdates() {
@@ -44,11 +42,14 @@ class CurrencyRatesInteractorImpl(
     override fun setBaseCurrency(currency: Currency) {
         Log.v(TAG, "setBaseCurrency: currency = $currency")
         this.baseCurrency = currency
+        scope.launch { updateRates() }
     }
 
     override fun setAmount(amount: BigDecimal) {
         Log.v(TAG, "setAmount: amount = $amount ")
         this.amount = amount
+        val rates = ratesRepository.getLastRates()
+        ratesChannel.offer(rates.multiplied(amount))
     }
 
     companion object {
