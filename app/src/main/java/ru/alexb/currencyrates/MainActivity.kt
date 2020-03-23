@@ -9,16 +9,18 @@ import ru.alexb.currencyrates.di.Injector
 import ru.alexb.currencyrates.rates.service.CurrencyRatesService
 import java.math.BigDecimal
 import java.util.*
+import javax.inject.Inject
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
-    private val service: CurrencyRatesService by lazy {
-        Injector.mainComponent.rates().currencyRatesService()
-    }
+    @Inject
+    lateinit var service: CurrencyRatesService
+
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var logJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Injector.mainComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
