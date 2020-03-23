@@ -1,9 +1,9 @@
-package ru.alexb.currencyrates.data.repository
+package ru.alexb.currencyrates.rates.data.repository
 
-import ru.alexb.currencyrates.data.repository.datasource.CacheCurrencyRatesDataSource
-import ru.alexb.currencyrates.data.repository.datasource.RemoteCurrencyRatesDataSource
-import ru.alexb.currencyrates.domain.model.CurrencyRates
-import ru.alexb.currencyrates.domain.repository.CurrencyRatesRepository
+import ru.alexb.currencyrates.rates.data.repository.datasource.CacheCurrencyRatesDataSource
+import ru.alexb.currencyrates.rates.data.repository.datasource.RemoteCurrencyRatesDataSource
+import ru.alexb.currencyrates.rates.domain.model.CurrencyRates
+import ru.alexb.currencyrates.rates.domain.repository.CurrencyRatesRepository
 import java.util.*
 import kotlin.NoSuchElementException
 

@@ -1,4 +1,4 @@
-package ru.alexb.currencyrates.domain.model
+package ru.alexb.currencyrates.rates.domain.model
 
 import java.math.BigDecimal
 import java.util.*

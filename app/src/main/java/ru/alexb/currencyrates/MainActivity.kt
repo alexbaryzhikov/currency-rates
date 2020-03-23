@@ -5,56 +5,49 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ReceiveChannel
 import ru.alexb.currencyrates.di.Injector
-import ru.alexb.currencyrates.domain.interactor.CurrencyRatesInteractor
-import ru.alexb.currencyrates.domain.model.CurrencyRates
+import ru.alexb.currencyrates.rates.service.CurrencyRatesService
 import java.math.BigDecimal
 import java.util.*
-import javax.inject.Inject
 import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
-    @Inject
-    lateinit var currencyRatesInteractor: CurrencyRatesInteractor
-
-    @Inject
-    lateinit var ratesChannel: ReceiveChannel<CurrencyRates>
-
+    private val service: CurrencyRatesService by lazy {
+        Injector.mainComponent.rates().currencyRatesService()
+    }
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var logJob: Job? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Injector.mainComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }
 
     override fun onStart() {
         super.onStart()
+        service.start()
         logJob = scope.launch {
-            for (rates in ratesChannel) {
+            for (rates in service.currencyRatesChannel) {
                 Log.d(TAG, "rates = $rates")
             }
         }
-        currencyRatesInteractor.startUpdates()
     }
 
     override fun onStop() {
         super.onStop()
-        currencyRatesInteractor.stopUpdates()
+        service.stop()
         logJob?.cancel()
         logJob = null
     }
 
     fun onChangeBaseCurrencyClicked(view: View) {
         val currency = Random.Default.nextInt(currencies.size).let { currencies[it] }
-        currencyRatesInteractor.setBaseCurrency(currency)
+        service.baseCurrencyChannel.offer(currency)
     }
 
     fun onChangeAmountClicked(view: View) {
         val amount = Random.Default.nextLong(10_000)
-        currencyRatesInteractor.setAmount(BigDecimal.valueOf(amount))
+        service.amountChannel.offer(BigDecimal.valueOf(amount))
     }
 
     companion object {

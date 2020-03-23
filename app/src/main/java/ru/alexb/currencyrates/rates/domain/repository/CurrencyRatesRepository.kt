@@ -1,6 +1,6 @@
-package ru.alexb.currencyrates.domain.repository
+package ru.alexb.currencyrates.rates.domain.repository
 
-import ru.alexb.currencyrates.domain.model.CurrencyRates
+import ru.alexb.currencyrates.rates.domain.model.CurrencyRates
 import java.util.*
 
 interface CurrencyRatesRepository {

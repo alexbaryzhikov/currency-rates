@@ -1,4 +1,4 @@
-package ru.alexb.currencyrates.data.dto
+package ru.alexb.currencyrates.rates.data.dto
 
 data class CurrencyRatesDto(
     val baseCurrency: String,

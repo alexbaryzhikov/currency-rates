@@ -1,31 +1,45 @@
-package ru.alexb.currencyrates.domain.interactor
+package ru.alexb.currencyrates.rates.domain.interactor
 
 import android.util.Log
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
-import ru.alexb.currencyrates.domain.model.CurrencyRates
-import ru.alexb.currencyrates.domain.repository.CurrencyRatesRepository
+import ru.alexb.currencyrates.rates.domain.model.CurrencyRates
+import ru.alexb.currencyrates.rates.domain.repository.CurrencyRatesRepository
 import java.math.BigDecimal
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 class CurrencyRatesInteractorImpl(
     private val ratesRepository: CurrencyRatesRepository,
+    private val baseCurrencyChannel: ReceiveChannel<Currency>,
+    private val amountChannel: ReceiveChannel<BigDecimal>,
     private val ratesChannel: SendChannel<CurrencyRates>
 ) : CurrencyRatesInteractor {
     private var baseCurrency: Currency = BASE_CURRENCY_DEFAULT
     private var amount: BigDecimal = AMOUNT_DEFAULT
-    private var scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private var updatesJob: Job? = null
+    private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    private val jobs: ArrayList<Job> = ArrayList()
 
-    override fun startUpdates() {
-        Log.v(TAG, "startUpdates called")
-        updatesJob = scope.launch {
+    override fun onStart() {
+        Log.v(TAG, "onStart called")
+        jobs.add(scope.launch {
             while (true) {
                 updateRates()
                 delay(UPDATE_INTERVAL)
             }
-        }
+        })
+        jobs.add(scope.launch {
+            for (currency in baseCurrencyChannel) {
+                setBaseCurrency(currency)
+            }
+        })
+        jobs.add(scope.launch {
+            for (amount in amountChannel) {
+                setAmount(amount)
+            }
+        })
     }
 
     private suspend fun updateRates() {
@@ -33,23 +47,23 @@ class CurrencyRatesInteractorImpl(
         ratesChannel.send(rates.multiplied(amount))
     }
 
-    override fun stopUpdates() {
-        Log.v(TAG, "stopUpdates called")
-        updatesJob?.cancel()
-        updatesJob = null
-    }
-
-    override fun setBaseCurrency(currency: Currency) {
+    private fun setBaseCurrency(currency: Currency) {
         Log.v(TAG, "setBaseCurrency: currency = $currency")
         this.baseCurrency = currency
         scope.launch { updateRates() }
     }
 
-    override fun setAmount(amount: BigDecimal) {
+    private fun setAmount(amount: BigDecimal) {
         Log.v(TAG, "setAmount: amount = $amount ")
         this.amount = amount
         val rates = ratesRepository.getLastRates()
         ratesChannel.offer(rates.multiplied(amount))
+    }
+
+    override fun onStop() {
+        Log.v(TAG, "onStop called")
+        jobs.forEach { it.cancel() }
+        jobs.clear()
     }
 
     companion object {

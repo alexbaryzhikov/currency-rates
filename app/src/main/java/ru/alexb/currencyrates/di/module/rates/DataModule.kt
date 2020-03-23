@@ -1,21 +1,23 @@
-package ru.alexb.currencyrates.di.module
+package ru.alexb.currencyrates.di.module.rates
 
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.alexb.currencyrates.data.datasource.CacheCurrencyRatesDataSourceImpl
-import ru.alexb.currencyrates.data.datasource.RemoteCurrencyRatesDataSourceImpl
-import ru.alexb.currencyrates.data.datasource.api.CurrencyRatesApi
-import ru.alexb.currencyrates.data.repository.CurrencyRatesRepositoryImpl
-import ru.alexb.currencyrates.data.repository.datasource.CacheCurrencyRatesDataSource
-import ru.alexb.currencyrates.data.repository.datasource.RemoteCurrencyRatesDataSource
-import ru.alexb.currencyrates.domain.repository.CurrencyRatesRepository
+import ru.alexb.currencyrates.di.annotation.scope.RatesScope
+import ru.alexb.currencyrates.rates.data.datasource.CacheCurrencyRatesDataSourceImpl
+import ru.alexb.currencyrates.rates.data.datasource.RemoteCurrencyRatesDataSourceImpl
+import ru.alexb.currencyrates.rates.data.datasource.api.CurrencyRatesApi
+import ru.alexb.currencyrates.rates.data.repository.CurrencyRatesRepositoryImpl
+import ru.alexb.currencyrates.rates.data.repository.datasource.CacheCurrencyRatesDataSource
+import ru.alexb.currencyrates.rates.data.repository.datasource.RemoteCurrencyRatesDataSource
+import ru.alexb.currencyrates.rates.domain.repository.CurrencyRatesRepository
 
 @Module
 class DataModule {
 
     @Provides
+    @RatesScope
     fun provideCurrencyRatesRepository(
         remoteDs: RemoteCurrencyRatesDataSource,
         cacheDs: CacheCurrencyRatesDataSource

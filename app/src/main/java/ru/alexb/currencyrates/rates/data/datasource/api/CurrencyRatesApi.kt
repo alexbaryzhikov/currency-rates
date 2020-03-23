@@ -1,8 +1,8 @@
-package ru.alexb.currencyrates.data.datasource.api
+package ru.alexb.currencyrates.rates.data.datasource.api
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.alexb.currencyrates.data.dto.CurrencyRatesDto
+import ru.alexb.currencyrates.rates.data.dto.CurrencyRatesDto
 
 interface CurrencyRatesApi {
     @GET("/api/android/latest")

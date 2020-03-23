@@ -1,9 +1,9 @@
-package ru.alexb.currencyrates.data.datasource
+package ru.alexb.currencyrates.rates.data.datasource
 
-import ru.alexb.currencyrates.data.datasource.api.CurrencyRatesApi
-import ru.alexb.currencyrates.data.dto.CurrencyRatesDto
-import ru.alexb.currencyrates.data.repository.datasource.RemoteCurrencyRatesDataSource
-import ru.alexb.currencyrates.domain.model.CurrencyRates
+import ru.alexb.currencyrates.rates.data.datasource.api.CurrencyRatesApi
+import ru.alexb.currencyrates.rates.data.dto.CurrencyRatesDto
+import ru.alexb.currencyrates.rates.data.repository.datasource.RemoteCurrencyRatesDataSource
+import ru.alexb.currencyrates.rates.domain.model.CurrencyRates
 import java.math.BigDecimal
 import java.util.*
 
