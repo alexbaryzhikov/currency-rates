@@ -44,12 +44,14 @@ class CurrencyRatesInteractorImpl(
 
     private suspend fun updateRates() {
         val rates = ratesRepository.updateAndGetRates(baseCurrency)
-        ratesChannel.send(rates.multiplied(amount))
+        ratesChannel.send(rates.copy(amount = amount))
     }
 
     private fun setBaseCurrency(currency: Currency) {
         Log.v(TAG, "setBaseCurrency: currency = $currency")
         this.baseCurrency = currency
+        val rates = ratesRepository.getLastRates().rates
+        this.amount = rates.getValue(currency).multiply(this.amount)
         scope.launch { updateRates() }
     }
 
@@ -57,7 +59,7 @@ class CurrencyRatesInteractorImpl(
         Log.v(TAG, "setAmount: amount = $amount ")
         this.amount = amount
         val rates = ratesRepository.getLastRates()
-        ratesChannel.offer(rates.multiplied(amount))
+        ratesChannel.offer(rates.copy(amount = amount))
     }
 
     override fun onStop() {
