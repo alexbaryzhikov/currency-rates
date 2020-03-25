@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.*
-import ru.alexb.currencyrates.R
 import ru.alexb.currencyrates.di.Injector
 import ru.alexb.currencyrates.rates.domain.model.CurrencyRates
 import ru.alexb.currencyrates.rates.service.CurrencyRatesService
@@ -34,14 +33,14 @@ class MainViewModel : ViewModel() {
         val baseItem = CurrencyItem(
             code = baseCurrency.currencyCode,
             name = baseCurrency.displayName,
-            iconResId = R.drawable.flag_australia,
+            iconResId = currencyIcons.getValue(baseCurrency.currencyCode),
             amount = amount.round3().toPlainString()
         )
         val items = rates.map { (currency, rate) ->
             CurrencyItem(
                 code = currency.currencyCode,
                 name = currency.displayName,
-                iconResId = R.drawable.flag_australia,
+                iconResId = currencyIcons.getValue(currency.currencyCode),
                 amount = rate.multiply(amount).round3().toPlainString()
             )
         }

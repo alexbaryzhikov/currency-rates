@@ -49,10 +49,12 @@ class CurrencyRatesInteractorImpl(
 
     private fun setBaseCurrency(currency: Currency) {
         Log.v(TAG, "setBaseCurrency: currency = $currency")
-        this.baseCurrency = currency
-        val rates = ratesRepository.getLastRates().rates
-        this.amount = rates.getValue(currency).multiply(this.amount)
-        scope.launch { updateRates() }
+        if (baseCurrency != currency) {
+            baseCurrency = currency
+            val rates = ratesRepository.getLastRates().rates
+            amount = rates.getValue(currency).multiply(amount)
+            scope.launch { updateRates() }
+        }
     }
 
     private fun setAmount(amount: BigDecimal) {
