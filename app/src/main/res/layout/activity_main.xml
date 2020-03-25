@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".MainActivity">
+    tools:context=".ui.view.MainActivity">
 
-    <Button
-        android:id="@+id/changeBaseCurrencyButton"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ratesView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onChangeBaseCurrencyClicked"
-        android:text="Change base currency" />
+        android:layout_height="match_parent"
+        tools:listitem="@layout/currency_item" />
 
-    <Button
-        android:id="@+id/changeAmountButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onChangeAmountClicked"
-        android:text="Change amount" />
-
-</LinearLayout>
+</FrameLayout>

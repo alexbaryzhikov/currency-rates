@@ -1,5 +1,6 @@
 package ru.alexb.currencyrates.rates.service
 
+import android.util.Log
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import ru.alexb.currencyrates.di.Injector
@@ -27,10 +28,16 @@ class CurrencyRatesServiceImpl : CurrencyRatesService {
     }
 
     override fun start() {
+        Log.v(TAG, "start called")
         currencyRatesInteractor.onStart()
     }
 
     override fun stop() {
+        Log.v(TAG, "stop called")
         currencyRatesInteractor.onStop()
+    }
+
+    companion object {
+        private const val TAG = "CurrencyRatesServiceImpl"
     }
 }

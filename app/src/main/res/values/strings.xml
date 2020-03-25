@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Currency Rates</string>
+    <string name="amount_hint">0.0</string>
 </resources>
