@@ -3,10 +3,10 @@ package ru.alexb.currencyrates
 import android.app.Application
 import ru.alexb.currencyrates.di.Injector
 
-class App: Application() {
+class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Injector.initialize(this)
+        Injector.initMainComponent()
     }
 }

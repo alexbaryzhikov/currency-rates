@@ -21,7 +21,7 @@ class MainViewModel : ViewModel() {
     private val updateJob: Job
 
     init {
-        Injector.mainComponent.uiComponent().inject(this)
+        Injector.uiComponent().inject(this)
         updateJob = scope.launch {
             for (rates in currencyRatesService.currencyRatesChannel) {
                 currencyItems.value = rates.toCurrencyItems()
@@ -47,7 +47,7 @@ class MainViewModel : ViewModel() {
         return listOf(baseItem) + items.sortedBy { it.code }
     }
 
-    private fun BigDecimal.round3() : BigDecimal =
+    private fun BigDecimal.round3(): BigDecimal =
         round(MathContext(precision() - scale() + 3, RoundingMode.HALF_UP))
 
     fun getCurrencyItems(): LiveData<List<CurrencyItem>> = currencyItems

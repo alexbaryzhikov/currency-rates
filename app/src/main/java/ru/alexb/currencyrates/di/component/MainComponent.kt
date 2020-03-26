@@ -1,13 +1,12 @@
 package ru.alexb.currencyrates.di.component
 
 import dagger.Component
-import ru.alexb.currencyrates.di.module.AppModule
 import ru.alexb.currencyrates.di.module.MainModule
+import ru.alexb.currencyrates.di.module.ui.UiModule
 import javax.inject.Singleton
 
 @Component(
     modules = [
-        AppModule::class,
         MainModule::class
     ]
 )
@@ -16,5 +15,5 @@ interface MainComponent {
 
     fun ratesComponent(): RatesComponent
 
-    fun uiComponent(): UiComponent
+    fun uiComponent(uiModule: UiModule): UiComponent
 }
