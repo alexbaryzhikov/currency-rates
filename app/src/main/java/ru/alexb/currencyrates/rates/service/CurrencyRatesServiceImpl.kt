@@ -24,7 +24,7 @@ class CurrencyRatesServiceImpl : CurrencyRatesService {
     override lateinit var currencyRatesChannel: ReceiveChannel<@JvmSuppressWildcards CurrencyRates>
 
     init {
-        Injector.mainComponent.ratesComponent().inject(this)
+        Injector.mainComponent().ratesComponent().inject(this)
     }
 
     override fun start() {
