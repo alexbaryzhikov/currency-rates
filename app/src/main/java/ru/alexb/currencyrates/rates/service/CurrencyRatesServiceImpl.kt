@@ -29,12 +29,12 @@ class CurrencyRatesServiceImpl : CurrencyRatesService {
 
     override fun start() {
         Log.v(TAG, "start called")
-        currencyRatesInteractor.onStart()
+        currencyRatesInteractor.observeRates()
     }
 
     override fun stop() {
         Log.v(TAG, "stop called")
-        currencyRatesInteractor.onStop()
+        currencyRatesInteractor.stopObservingRates()
     }
 
     companion object {

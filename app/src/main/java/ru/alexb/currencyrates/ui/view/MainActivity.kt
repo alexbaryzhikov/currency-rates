@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.alexb.currencyrates.R
 import ru.alexb.currencyrates.di.Injector
-import ru.alexb.currencyrates.rates.service.CurrencyRatesService
 import ru.alexb.currencyrates.ui.view.adapter.CurrencyRecyclerViewAdapter
 import ru.alexb.currencyrates.ui.viewmodel.MainViewModel
 import javax.inject.Inject
@@ -21,9 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModel: MainViewModel
-
-    @Inject
-    lateinit var currencyRatesService: CurrencyRatesService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Injector.initUiComponent(this)
@@ -41,12 +37,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        currencyRatesService.start()
+        viewModel.onActivityStart()
     }
 
     override fun onStop() {
         super.onStop()
-        currencyRatesService.stop()
+        viewModel.onActivityStop()
     }
 
     override fun onDestroy() {

@@ -17,8 +17,14 @@ class MainViewControllerImpl(
 
     override fun setAmount(amount: String) {
         Log.v(TAG, "setAmount: amount = $amount")
-        val amountNum = BigDecimal(amount)
+        val amountNum = BigDecimal(properDecimal(amount))
         service.amountChannel.offer(amountNum)
+    }
+
+    private fun properDecimal(amount: String): String = amount.let {
+        if (it.startsWith('.')) "0$it" else it
+    }.let {
+        if (it.endsWith('.')) "${it}0" else it
     }
 
     companion object {

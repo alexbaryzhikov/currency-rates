@@ -22,8 +22,8 @@ class CurrencyRatesInteractorImpl(
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val jobs: ArrayList<Job> = ArrayList()
 
-    override fun onStart() {
-        Log.v(TAG, "onStart called")
+    override fun observeRates() {
+        Log.v(TAG, "observeRates called")
         jobs.add(scope.launch {
             while (true) {
                 updateRates()
@@ -64,8 +64,8 @@ class CurrencyRatesInteractorImpl(
         ratesChannel.offer(rates.copy(amount = amount))
     }
 
-    override fun onStop() {
-        Log.v(TAG, "onStop called")
+    override fun stopObservingRates() {
+        Log.v(TAG, "stopObservingRates called")
         jobs.forEach { it.cancel() }
         jobs.clear()
     }

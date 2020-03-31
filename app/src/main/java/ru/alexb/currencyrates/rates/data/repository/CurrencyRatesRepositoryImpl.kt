@@ -18,3 +18,5 @@ class CurrencyRatesRepositoryImpl(
     override fun getLastRates(): CurrencyRates =
         cacheDs.rates ?: throw NoSuchElementException("Cache is empty")
 }
+
+// TODO: update rates only if online
